@@ -4,8 +4,6 @@ from math import inf
 from random import randint
 from winsound import Beep
 
-# This is awesome!
-
 # Get the number of players
 num_players = int(float(input("How many people are playing?\n")))
 if num_players < 0:
