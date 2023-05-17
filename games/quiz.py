@@ -1,10 +1,13 @@
 # This is a trivia game for people to play with their friends.
 # Importing the necessary modules.
+
 from math import inf
 from random import randint
 from winsound import Beep
+from time import time
 
 # Get the number of players
+
 num_players = int(float(input("How many people are playing?\n")))
 if num_players < 0:
     num_players = int(float(input("Invalid input. Please enter a valid positive integer.\n")))
@@ -43,7 +46,24 @@ else:
         mode = 2
     else:
         print("Selecting first right answer by default.")
+        print("")
         mode = 1
+
+want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
+if want_time.lower() == "yes":
+    want_time = True
+elif want_time.lower() == "no":
+    want_time = False
+else:
+    want_time = input("Invalid input. Enter yes or no.\n")
+    if want_time.lower() == "yes":
+        want_time = True
+    elif want_time.lower() == "no":
+        want_time = False
+    else:
+        print("Setting time to on.")
+        print("")
+        want_time = True
 
 # Creating question bank and bank of answers.
 
