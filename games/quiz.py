@@ -49,6 +49,7 @@ else:
         print("")
         mode = 1
 
+# Adding time feature for each question.
 want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
 if want_time.lower() == "yes":
     want_time = True
