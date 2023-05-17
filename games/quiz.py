@@ -70,7 +70,7 @@ else:
 # Letting the users choose how much time they want for each question.
 
 if want_time:
-    time_wanted = int(input("Enter how many seconds you want for each question."))
+    time_wanted = int(input("Enter how many seconds you want for each question.\n"))
 # Creating question bank and bank of answers.
 
 question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n"]
