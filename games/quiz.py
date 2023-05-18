@@ -112,6 +112,7 @@ def get_first_answerer():
 # Ask each question to the players
 
 for question_index in range(len(question_bank)):
+    global current_player
     current_player = first_answer_from
     num_wrong_answers = 0
     raw_correct_answers = []
