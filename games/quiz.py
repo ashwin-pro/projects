@@ -6,113 +6,117 @@ from winsound import Beep
 from time import time
 
 # Get the number of players
-def get_num_players():
-    global num_players
-    num_players = int(float(input("How many people are playing?\n")))
-    if num_players < 0:
-        global num_players
-        num_players = int(float(input("Invalid input. Please enter a valid positive integer.\n")))
-        if num_players < 0:
-            print("Invalid input. Keeping number of players as 1 by default.")
-            global num_players
-            num_players = 1
-# Initialize the dictionary to hold player names
-def create_dictionaries():
-    global player_names
-    player_names = {}
-    # Initialize the dictionary to hold player scores
-    global player_scores
-    player_scores = {}
 
-    # Creating a dictionary of the questions attempted by each player.
-    global questions_attempted
-    questions_attempted = {}
+
+num_players = int(float(input("How many people are playing?\n")))
+if num_players < 0:
+
+    num_players = int(float(input("Invalid input. Please enter a valid positive integer.\n")))
+    if num_players < 0:
+        print("Invalid input. Keeping number of players as 1 by default.")
+
+        num_players = 1
+# Initialize the dictionary to hold player names
+
+
+player_names = {}
+# Initialize the dictionary to hold player scores
+
+player_scores = {}
+
+# Creating a dictionary of the questions attempted by each player.
+
+questions_attempted = {}
 
 # Get player names from user
-def initialize_dictionaries():
-    for i in range(num_players):
-        name_asking = "Enter the name of player"
-        global player_names
-        player_names[i] = input(name_asking+" "+str(i+1)+".\n")
-        global player_scores
-        player_scores[i] = 0
-        global questions_attempted
-        questions_attempted[i] = 0
+
+for i in range(num_players):
+    name_asking = "Enter the name of player"
+
+    player_names[i] = input(name_asking+" "+str(i+1)+".\n")
+
+    player_scores[i] = 0
+
+    questions_attempted[i] = 0
 
 # Asking the players what mode they want
-def get_mode():
-    global mode
-    mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
 
+
+mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
+
+if mode.lower() == "first right answer":
+
+    mode = 1
+elif mode.lower() == "repeating choices":
+
+    mode = 2
+else:
+
+    mode = input(("Enter a valid mode(first right answer or repeating choices).\n"))
     if mode.lower() == "first right answer":
-        global mode
+
         mode = 1
     elif mode.lower() == "repeating choices":
-        global mode
+
         mode = 2
     else:
-        global mode
-        mode = input(("Enter a valid mode(first right answer or repeating choices).\n"))
-        if mode.lower() == "first right answer":
-            global mode
-            mode = 1
-        elif mode.lower() == "repeating choices":
-            global mode
-            mode = 2
-        else:
-            print("Selecting first right answer by default.")
-            print("")
-            global mode
-            mode = 1
+        print("Selecting first right answer by default.")
+        print("")
+
+        mode = 1
 
 # Adding time feature for each question.
-def get_time():
-    global want_time
-    want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
+
+want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
+if want_time.lower() == "yes":
+
+    want_time = True
+elif want_time.lower() == "no":
+
+    want_time = False
+else:
+
+    want_time = input("Invalid input. Enter yes or no.\n")
     if want_time.lower() == "yes":
-        global want_time
+
         want_time = True
     elif want_time.lower() == "no":
-        global want_time
+
         want_time = False
     else:
-        global want_time
-        want_time = input("Invalid input. Enter yes or no.\n")
-        if want_time.lower() == "yes":
-            global want_time
-            want_time = True
-        elif want_time.lower() == "no":
-            global want_time
-            want_time = False
-        else:
-            print("Setting time to on.")
-            print("")
-            global want_time
-            want_time = True
+        print("Setting time to on.")
+        print("")
+
+        want_time = True
 
 
 # Letting the users choose how much time they want for each question.
-def get_amount_time():
-    if want_time:
-        global time_wanted
-        time_wanted = int(input("Enter how many seconds you want for each question.\n"))
+
+if want_time:
+    raw_time_wanted = input("Enter how many seconds you want for each question.\n")
+    if raw_time_wanted == "0":
+        raw_time_wanted = int(input("Please enter a valid number.\n"))
+        if raw_time_wanted == "0":
+            print("Invalid input. Selecting 5 seconds for each question by default.")
+            raw_time_wanted = 5
+    time_wanted = raw_time_wanted * 1000
+
+    print(time_wanted)
 # Creating question bank and bank of answers.
-def create_question_and_answer_banks():
-    global question_bank
+
     question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n"]
-    global answers
+
     answers = ["peregrine falcon","bugatti chiron supersport","johann goethe"]
 
 # Run the quiz
 # First, decide who takes the first question
 # Randomly select the id of the player who is the lucky one!
-def get_first_answerer():
-    global first_answer_from
+
     first_answer_from = randint(0,len(player_names)-1)
 # Ask each question to the players
 
 for question_index in range(len(question_bank)):
-    global current_player
+
     current_player = first_answer_from
     num_wrong_answers = 0
     raw_correct_answers = []
