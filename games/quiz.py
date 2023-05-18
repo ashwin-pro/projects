@@ -67,37 +67,49 @@ def get_mode():
             mode = 1
 
 # Adding time feature for each question.
-want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
-if want_time.lower() == "yes":
-    want_time = True
-elif want_time.lower() == "no":
-    want_time = False
-else:
-    want_time = input("Invalid input. Enter yes or no.\n")
+def get_time():
+    global want_time
+    want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
     if want_time.lower() == "yes":
+        global want_time
         want_time = True
     elif want_time.lower() == "no":
+        global want_time
         want_time = False
     else:
-        print("Setting time to on.")
-        print("")
-        want_time = True
+        global want_time
+        want_time = input("Invalid input. Enter yes or no.\n")
+        if want_time.lower() == "yes":
+            global want_time
+            want_time = True
+        elif want_time.lower() == "no":
+            global want_time
+            want_time = False
+        else:
+            print("Setting time to on.")
+            print("")
+            global want_time
+            want_time = True
 
 
 # Letting the users choose how much time they want for each question.
-
-if want_time:
-    time_wanted = int(input("Enter how many seconds you want for each question.\n"))
+def get_amount_time():
+    if want_time:
+        global time_wanted
+        time_wanted = int(input("Enter how many seconds you want for each question.\n"))
 # Creating question bank and bank of answers.
-
-question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n"]
-answers = ["peregrine falcon","bugatti chiron supersport","johann goethe"]
+def create_question_and_answer_banks():
+    global question_bank
+    question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n"]
+    global answers
+    answers = ["peregrine falcon","bugatti chiron supersport","johann goethe"]
 
 # Run the quiz
 # First, decide who takes the first question
 # Randomly select the id of the player who is the lucky one!
-
-first_answer_from = randint(0,len(player_names)-1)
+def get_first_answerer():
+    global first_answer_from
+    first_answer_from = randint(0,len(player_names)-1)
 # Ask each question to the players
 
 for question_index in range(len(question_bank)):
