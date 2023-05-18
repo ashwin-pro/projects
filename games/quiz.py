@@ -1,53 +1,70 @@
 # This is a trivia game for people to play with their friends.
 # Importing the necessary modules.
-
-from math import inf
-from random import randint
-from winsound import Beep
-from time import time
+def import_modules():
+    from math import inf
+    from random import randint
+    from winsound import Beep
+    from time import time
 
 # Get the number of players
-
-num_players = int(float(input("How many people are playing?\n")))
-if num_players < 0:
-    num_players = int(float(input("Invalid input. Please enter a valid positive integer.\n")))
+def get_num_players():
+    global num_players
+    num_players = int(float(input("How many people are playing?\n")))
     if num_players < 0:
-        print("Invalid input. Keeping number of players as 1 by default.")
-        num_players = 1
+        global num_players
+        num_players = int(float(input("Invalid input. Please enter a valid positive integer.\n")))
+        if num_players < 0:
+            print("Invalid input. Keeping number of players as 1 by default.")
+            global num_players
+            num_players = 1
 # Initialize the dictionary to hold player names
-player_names = {}
-# Initialize the dictionary to hold player scores
-player_scores = {}
+def create_dictionaries():
+    global player_names
+    player_names = {}
+    # Initialize the dictionary to hold player scores
+    global player_scores
+    player_scores = {}
 
-# Creating a dictionary of the questions attempted by each player.
-questions_attempted = {}
+    # Creating a dictionary of the questions attempted by each player.
+    global questions_attempted
+    questions_attempted = {}
 
 # Get player names from user
-
-for i in range(num_players):
-    name_asking = "Enter the name of player"
-    player_names[i] = input(name_asking+" "+str(i+1)+".\n")
-    player_scores[i] = 0
-    questions_attempted[i] = 0
+def initialize_dictionaries():
+    for i in range(num_players):
+        name_asking = "Enter the name of player"
+        global player_names
+        player_names[i] = input(name_asking+" "+str(i+1)+".\n")
+        global player_scores
+        player_scores[i] = 0
+        global questions_attempted
+        questions_attempted[i] = 0
 
 # Asking the players what mode they want
+def get_mode():
+    global mode
+    mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
 
-mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
-
-if mode.lower() == "first right answer":
-    mode = 1
-elif mode.lower() == "repeating choices":
-    mode = 2
-else:
-    mode = input(("Enter a valid mode(first right answer or repeating choices).\n"))
     if mode.lower() == "first right answer":
+        global mode
         mode = 1
     elif mode.lower() == "repeating choices":
+        global mode
         mode = 2
     else:
-        print("Selecting first right answer by default.")
-        print("")
-        mode = 1
+        global mode
+        mode = input(("Enter a valid mode(first right answer or repeating choices).\n"))
+        if mode.lower() == "first right answer":
+            global mode
+            mode = 1
+        elif mode.lower() == "repeating choices":
+            global mode
+            mode = 2
+        else:
+            print("Selecting first right answer by default.")
+            print("")
+            global mode
+            mode = 1
 
 # Adding time feature for each question.
 want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
