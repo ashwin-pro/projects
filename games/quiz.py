@@ -92,7 +92,14 @@ else:
 
 # Letting the users choose how much time they want for each question.
 
-
+if want_time:
+    raw_time_wanted = input("Enter how many seconds you want for each question.\n")
+    if raw_time_wanted == "0":
+        raw_time_wanted = int(input("Please enter a valid number.\n"))
+        if raw_time_wanted == "0":
+            print("Invalid input. Selecting 5 seconds for each question by default.")
+            raw_time_wanted = 5
+    time_wanted = raw_time_wanted * 1000
 
 
 # Creating question bank and bank of answers.
