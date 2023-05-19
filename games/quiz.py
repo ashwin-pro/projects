@@ -129,22 +129,31 @@ for question_index in range(len(question_bank)):
                 # Ask the question to the next player
                 print(player_names[current_player],"should answer now.")
                 answer = input(question_bank[question_index])
+                start_time = time()
                 questions_attempted[current_player] += 1
-                # Check if answer is right  
-                    
+                # Check if answer is right
                 if answer.lower() == answers[question_index]:
                             # Increment the score!
                             # Compute the score between 0 and 1 depending on the number of wrong answers.
-                    score = 1 - 1/num_players * num_wrong_answers
-                    player_scores[current_player] += score
-                    print('Congrats! Right Answer,',player_names[current_player], ":-)")
-                    correct_answer_given = True
-                    Beep(2500,1000)
+                    end_time = time()
+                    if end_time - start_time <= time_wanted:
+                        score = 1 - 1/num_players * num_wrong_answers
+                        player_scores[current_player] += score
+                        print('Congrats! Right Answer,',player_names[current_player], ":-)")
+                        correct_answer_given = True
+                        Beep(2500,1000)
+                    else:
+                        print("Sorry,",player_names[current_player],"too much time was taken to answer this question. :(")
+                        Beep(250,1000)
                 else:
                             # Wrong answer
                     num_wrong_answers += 1
-                    print("Sorry, Wrong Answer,",player_names[current_player],":-(")
-                    Beep(250,1000)
+                    if end_time - start_time <= time_wanted:
+                        print("Sorry, Wrong Answer,",player_names[current_player],":-(")
+                        Beep(250,1000)
+                    else:
+                        print("Sorry,",player_names[current_player],"too much time was taken to answer this question. :(")
+                        Beep(250,1000)
                     # Go to the next player
                     current_player += 1
                     # Make sure the index loops back
