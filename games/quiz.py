@@ -3,8 +3,12 @@
 from math import inf
 from random import randint
 from winsound import Beep
+import wave
 from time import time
-
+def correct_answer():
+    wave.open("Correct Answer.wav","rb")
+def wrong_answer():
+    wrong_answer_sound = wave.open("Wrong Answer.wav","rb")
 # Get the number of players
 
 
@@ -99,7 +103,7 @@ if want_time:
         if raw_time_wanted == "0":
             print("Invalid input. Selecting 5 seconds for each question by default.")
             raw_time_wanted = 5
-    time_wanted = raw_time_wanted * 1000
+    time_wanted = float(raw_time_wanted) * 1000
 
 
 # Creating question bank and bank of answers.
@@ -141,19 +145,19 @@ for question_index in range(len(question_bank)):
                         player_scores[current_player] += score
                         print('Congrats! Right Answer,',player_names[current_player], ":-)")
                         correct_answer_given = True
-                        Beep(2500,1000)
+                        correct_answer()
                     else:
                         print("Sorry,",player_names[current_player],"too much time was taken to answer this question. :(")
-                        Beep(250,1000)
+                        wrong_answer()
                 else:
                             # Wrong answer
                     num_wrong_answers += 1
                     if end_time - start_time <= time_wanted:
                         print("Sorry, Wrong Answer,",player_names[current_player],":-(")
-                        Beep(250,1000)
+                        wrong_answer()
                     else:
                         print("Sorry,",player_names[current_player],"too much time was taken to answer this question. :(")
-                        Beep(250,1000)
+                        wrong_answer()
                     # Go to the next player
                     current_player += 1
                     # Make sure the index loops back
