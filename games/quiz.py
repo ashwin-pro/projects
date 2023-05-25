@@ -1,10 +1,9 @@
 # This is a trivia game for people to play with their friends.
 # Importing the necessary modules.
+
 from math import inf
 from random import randint
 from winsound import Beep
-
-# This is awesome!
 
 # Get the number of players
 num_players = int(float(input("How many people are playing?\n")))
