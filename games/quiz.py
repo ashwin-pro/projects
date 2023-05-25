@@ -3,124 +3,63 @@
 from math import inf
 from random import randint
 from winsound import Beep
-import wave
-from time import time
-def correct_answer():
-    wave.open("Correct Answer.wav","rb")
-def wrong_answer():
-    wrong_answer_sound = wave.open("Wrong Answer.wav","rb")
+
+# This is awesome!
+
 # Get the number of players
-
-
 num_players = int(float(input("How many people are playing?\n")))
 if num_players < 0:
-
     num_players = int(float(input("Invalid input. Please enter a valid positive integer.\n")))
     if num_players < 0:
         print("Invalid input. Keeping number of players as 1 by default.")
-
         num_players = 1
 # Initialize the dictionary to hold player names
-
-
 player_names = {}
 # Initialize the dictionary to hold player scores
-
 player_scores = {}
 
 # Creating a dictionary of the questions attempted by each player.
-
 questions_attempted = {}
 
 # Get player names from user
 
 for i in range(num_players):
     name_asking = "Enter the name of player"
-
     player_names[i] = input(name_asking+" "+str(i+1)+".\n")
-
     player_scores[i] = 0
-
     questions_attempted[i] = 0
 
 # Asking the players what mode they want
 
-
 mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
 
 if mode.lower() == "first right answer":
-
     mode = 1
 elif mode.lower() == "repeating choices":
-
     mode = 2
 else:
-
     mode = input(("Enter a valid mode(first right answer or repeating choices).\n"))
     if mode.lower() == "first right answer":
-
         mode = 1
     elif mode.lower() == "repeating choices":
-
         mode = 2
     else:
         print("Selecting first right answer by default.")
-        print("")
-
         mode = 1
-
-# Adding time feature for each question.
-
-want_time = input("Do you want the questions to be timed?\nIf you do, input yes.\n If you don't, input no.\n")
-if want_time.lower() == "yes":
-
-    want_time = True
-elif want_time.lower() == "no":
-
-    want_time = False
-else:
-
-    want_time = input("Invalid input. Enter yes or no.\n")
-    if want_time.lower() == "yes":
-
-        want_time = True
-    elif want_time.lower() == "no":
-
-        want_time = False
-    else:
-        print("Setting time to on.")
-        print("")
-
-        want_time = True
-
-
-# Letting the users choose how much time they want for each question.
-
-if want_time:
-    raw_time_wanted = input("Enter how many seconds you want for each question.\n")
-    if raw_time_wanted == "0":
-        raw_time_wanted = int(input("Please enter a valid number.\n"))
-        if raw_time_wanted == "0":
-            print("Invalid input. Selecting 5 seconds for each question by default.")
-            raw_time_wanted = 5
-    time_wanted = float(raw_time_wanted) * 1000
-
 
 # Creating question bank and bank of answers.
 
-    question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n"]
-
-    answers = ["peregrine falcon","bugatti chiron supersport","johann goethe"]
+question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n"]
+answers = ["peregrine falcon","bugatti chiron supersport","johann goethe"]
 
 # Run the quiz
 # First, decide who takes the first question
 # Randomly select the id of the player who is the lucky one!
 
-    first_answer_from = randint(0,len(player_names)-1)
+first_answer_from = randint(0,len(player_names)-1)
 # Ask each question to the players
 
 for question_index in range(len(question_bank)):
-
     current_player = first_answer_from
     num_wrong_answers = 0
     raw_correct_answers = []
@@ -133,31 +72,22 @@ for question_index in range(len(question_bank)):
                 # Ask the question to the next player
                 print(player_names[current_player],"should answer now.")
                 answer = input(question_bank[question_index])
-                start_time = time()
                 questions_attempted[current_player] += 1
-                # Check if answer is right
+                # Check if answer is right  
+                    
                 if answer.lower() == answers[question_index]:
                             # Increment the score!
                             # Compute the score between 0 and 1 depending on the number of wrong answers.
-                    end_time = time()
-                    if end_time - start_time <= time_wanted:
-                        score = 1 - 1/num_players * num_wrong_answers
-                        player_scores[current_player] += score
-                        print('Congrats! Right Answer,',player_names[current_player], ":-)")
-                        correct_answer_given = True
-                        correct_answer()
-                    else:
-                        print("Sorry,",player_names[current_player],"too much time was taken to answer this question. :(")
-                        wrong_answer()
+                    score = 1 - 1/num_players * num_wrong_answers
+                    player_scores[current_player] += score
+                    print('Congrats! Right Answer,',player_names[current_player], ":-)")
+                    correct_answer_given = True
+                    Beep(2500,1000)
                 else:
                             # Wrong answer
                     num_wrong_answers += 1
-                    if end_time - start_time <= time_wanted:
-                        print("Sorry, Wrong Answer,",player_names[current_player],":-(")
-                        wrong_answer()
-                    else:
-                        print("Sorry,",player_names[current_player],"too much time was taken to answer this question. :(")
-                        wrong_answer()
+                    print("Sorry, Wrong Answer,",player_names[current_player],":-(")
+                    Beep(250,1000)
                     # Go to the next player
                     current_player += 1
                     # Make sure the index loops back
