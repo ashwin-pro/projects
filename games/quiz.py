@@ -48,8 +48,8 @@ else:
 
 # Creating question bank and bank of answers.
 
-question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n"]
-answers = ["peregrine falcon","bugatti chiron supersport","johann goethe"]
+question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n","What is the slowest animal?\n"]
+answers = ["peregrine falcon","bugatti chiron supersport","johann goethe","three-toed sloth"]
 
 # Run the quiz
 # First, decide who takes the first question
@@ -174,15 +174,19 @@ print("Thank you for playing our game. We hope to see you next time.")
 
 # Asking for ratings
 rating = float(input("Please rate our game out of five stars.\n"))
-if rating != 5:
-    if rating>=4:
-        suggestions = input("Thank you for your support. Please enter your complaints or suggestions below.\n")
-    elif rating >= 3:
-        input("Thank you for your time. Please enter your complaints or suggestions below.\n")
-    elif rating >=1:
-        input("Please enter your complaints or suggestions below.\n")
-    else:
-        exit
+if rating <= 5 and rating >= 0:
+    suggestions = []
+    if rating != 5:
+        if rating>=4:
+            suggestions.append(input("Thank you for your support. Please enter your complaints or suggestions below.\n"))
+        elif rating >= 3:
+            suggestions.append(input("Thank you for your time. Please enter your complaints or suggestions below.\n"))
+        elif rating >=1:
+            suggestions.append(input("Please enter your complaints or suggestions below.\n"))
+        else:
+            exit
 
+    else:
+        print("Thank you so much for your support.")
 else:
-    print("Thank you so much for your support.")
+    print("Invalid rating.")
