@@ -32,15 +32,15 @@ for i in range(num_players):
 
 mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
 
-if mode.lower() == "first right answer":
+if mode.strip().strip().lower() == "first right answer":
     mode = 1
-elif mode.lower() == "repeating choices":
+elif mode.strip().lower() == "repeating choices":
     mode = 2
 else:
     mode = input(("Enter a valid mode(first right answer or repeating choices).\n"))
-    if mode.lower() == "first right answer":
+    if mode.strip().lower() == "first right answer":
         mode = 1
-    elif mode.lower() == "repeating choices":
+    elif mode.strip().lower() == "repeating choices":
         mode = 2
     else:
         print("Selecting first right answer by default.")
@@ -74,7 +74,7 @@ for question_index in range(len(question_bank)):
                 questions_attempted[current_player] += 1
                 # Check if answer is right  
                     
-                if answer.lower() == answers[question_index]:
+                if answer.strip().lower() == answers[question_index]:
                             # Increment the score!
                             # Compute the score between 0 and 1 depending on the number of wrong answers.
                     score = 1 - 1/num_players * num_wrong_answers
@@ -103,7 +103,7 @@ for question_index in range(len(question_bank)):
             print(player_names[current_player],"should answer now.")
             answer = input(question_bank[question_index])
             questions_attempted[current_player] += 1
-            if answer.lower() == answers[question_index]:
+            if answer.strip().lower() == answers[question_index]:
                 score = 1 - 1/num_players * num_wrong_answers
                 player_scores[current_player] += score
                 raw_correct_answers.append(player_names[current_player])
