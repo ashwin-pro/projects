@@ -5,6 +5,7 @@ from math import inf
 from random import randint
 from winsound import Beep
 
+f = open("suggestions.txt")
 # Get the number of players
 num_players = int(float(input("How many people are playing?\n")))
 if num_players < 0:
@@ -32,7 +33,7 @@ for i in range(num_players):
 
 mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
 
-if mode.strip().strip().lower() == "first right answer":
+if mode.strip().lower() == "first right answer":
     mode = 1
 elif mode.strip().lower() == "repeating choices":
     mode = 2
