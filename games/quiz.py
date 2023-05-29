@@ -175,6 +175,7 @@ def game():
 
     # Asking for ratings
     rating = float(input("Please rate our game out of five stars.\n"))
+    suggestions = False
     if rating <= 5 and rating >= 0:
         if rating != 5:
             if rating>=4:
@@ -196,6 +197,15 @@ def game():
     want_to_play = input('Would you like to play again?\nAnswer yes or no.\n')
     if want_to_play.strip().lower() == 'yes':
         game()
-    else:
+    elif want_to_play.strip().lower() == 'no':
         print('Thank you for playing.')
+    else:
+        want_to_play = input('Invalid input. Enter yes or no.\n')
+        if want_to_play.strip().lower() == 'yes':
+            game()
+        elif want_to_play.strip().lower() == 'no':
+            print('Thank you for playing.')
+        else:
+            print('Selecting no by default.')
+            print('Thank you for playing.')
 game()
