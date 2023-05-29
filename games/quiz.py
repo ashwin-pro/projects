@@ -1,6 +1,7 @@
 # This is a trivia game for people to play with their friends.
-# Importing the necessary modules.
+# Creating a function for the game
 def game():
+    # Importing the necessary modules.
     from math import inf
     from random import randint
     from winsound import Beep
@@ -173,7 +174,7 @@ def game():
     # Thanking the players for playing
     print("Thank you for playing our game. We hope to see you next time.")
 
-    # Asking for ratings
+    # Asking for ratings and suggestions
     rating = float(input("Please rate our game out of five stars.\n"))
     suggestions = False
     if rating <= 5 and rating >= 0:
@@ -191,9 +192,11 @@ def game():
             print("Thank you so much for your support.")
     else:
         print("Invalid rating.")
+    # Adding the user's suggestions to the suggestions text file
     if suggestions:
         suggestion = open("suggestions.txt","a")
         suggestion.write(suggestions+"\n")
+    # Asking the user if they want to play again
     want_to_play = input('Would you like to play again?\nAnswer yes or no.\n')
     if want_to_play.strip().lower() == 'yes':
         game()
@@ -208,4 +211,5 @@ def game():
         else:
             print('Selecting no by default.')
             print('Thank you for playing.')
+# Calling the game function in the beginning to run the game
 game()
