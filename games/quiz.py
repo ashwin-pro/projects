@@ -192,7 +192,7 @@ def game():
         print("Invalid rating.")
     if suggestions:
         suggestion = open("suggestions.txt","a")
-        suggestion.write(suggestions)
+        suggestion.write(suggestions+"\n")
     want_to_play = input('Would you like to play again?\nAnswer yes or no.\n')
     if want_to_play.strip().lower() == 'yes':
         game()
