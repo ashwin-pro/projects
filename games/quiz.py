@@ -6,14 +6,20 @@ def game():
     from random import randint
     from winsound import Beep
 
-
+    
     # Get the number of players
-    num_players = int(float(input("How many people are playing?\n")))
-    if num_players <= 0:
-        num_players = int(float(input("Invalid input. Please enter a valid positive integer.\n")))
-        if num_players <= 0:
-            print("Invalid input. Keeping number of players as 1 by default.")
-            num_players = 1
+    num_players = input("How many people are playing?\n")
+    valid_input = False
+    while(not valid_input):
+        try:
+            num_players = int(num_players)
+            # Check if input is in expected range, else keep prompting
+            if num_players > 0:
+                valid_input = True
+        except:
+            pass
+        num_players = input("Invalid input. Enter a number.\n")
+    
     # Initialize the dictionary to hold player names
     player_names = {}
     # Initialize the dictionary to hold player scores
