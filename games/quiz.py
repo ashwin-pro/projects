@@ -10,7 +10,7 @@ def game():
     # Get the number of players
     num_players = input("How many people are playing?\n")
     valid_input = False
-    while(not valid_input):
+    while not valid_input:
         try:
             num_players = int(num_players)
             # Check if input is in expected range, else keep prompting
