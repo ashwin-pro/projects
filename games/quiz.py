@@ -196,6 +196,7 @@ def game():
     if suggestions:
         suggestion = open("suggestions.txt","a")
         suggestion.write(suggestions+"\n")
+        suggestion.close()
     # Asking the user if they want to play again
     want_to_play = input('Would you like to play again?\nAnswer yes or no.\n')
     if want_to_play.strip().lower() == 'yes':
