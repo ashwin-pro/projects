@@ -10,15 +10,22 @@ def game():
     # Get the number of players
     num_players = input("How many people are playing?\n")
     valid_input = False
+    positive_input_needed = False
     while not valid_input:
         try:
             num_players = int(num_players)
             # Check if input is in expected range, else keep prompting
             if num_players > 0:
                 valid_input = True
+            else:
+                positive_input_needed = True
         except:
             pass
-        num_players = input("Invalid input. Enter a number.\n")
+        if not valid_input:
+            if not positive_input_needed:
+                num_players = input("Invalid input. Enter a number.\n")
+            else:
+                num_players = input("Invalid input. Enter a positive number.\n")
     
     # Initialize the dictionary to hold player names
     player_names = {}
