@@ -6,7 +6,6 @@ def game():
     from random import randint
     from winsound import Beep
 
-    
     # Get the number of players
     num_players = input("How many people are playing?\n")
     valid_input = False
@@ -187,7 +186,24 @@ def game():
     print("Thank you for playing our game. We hope to see you next time.")
 
     # Asking for ratings and suggestions
-    rating = float(input("Please rate our game out of five stars.\n"))
+    rating = input("Please rate our game out of five stars.\n")
+    valid_input = False
+    positive_input_needed = False
+    while not valid_input:
+        try:
+            rating = float(rating)
+            # Check if input is in expected range, else keep prompting
+            if rating >= 0:
+                valid_input = True
+            else:
+                positive_input_needed = True
+        except:
+            pass
+        if not valid_input:
+            if not positive_input_needed:
+                rating = input("Invalid input. Enter a number.\n")
+            else:
+                rating = input("Invalid input. Enter a positive number.\n")
     suggestions = False
     if rating <= 5 and rating >= 0:
         if rating != 5:
