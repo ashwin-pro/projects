@@ -5,6 +5,7 @@ def game():
     from math import inf
     from random import randint
     from winsound import Beep
+    from time import time
 
     # Get the number of players
     num_players = input("How many people are playing?\n")
@@ -59,8 +60,27 @@ def game():
             print("Selecting first right answer by default.")
             mode = 1
 
-    # Creating question bank and bank of answers.
+    # Asking the users whether they want time.
+    is_time_wanted = input("Do you want your questions to be timed? Enter yes if you do and no if you don't.\n")
+    if is_time_wanted.strip().lower() == 'yes':
+        is_time_wanted = True
+    elif is_time_wanted.strip().lower() == 'no':
+        is_time_wanted = False
+    else:
+        is_time_wanted = input("Invalid input. Enter yes or no.\n")
+        if is_time_wanted.strip().lower() == 'yes':
+            is_time_wanted = True
+        elif is_time_wanted.strip().lower() == 'no':
+            is_time_wanted = False
+        else:
+            is_time_wanted = False
+            print("Turning time on by default.\n")
 
+    # Asking the users how much time they want for each question.
+    if is_time_wanted:
+        time_wanted = input("Enter how much time you want for each question in seconds.")
+        
+    # Creating question bank and bank of answers.
     question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n","What is the slowest animal?\n"]
     answers = ["peregrine falcon","bugatti chiron supersport","johann goethe","three-toed sloth"]
 
