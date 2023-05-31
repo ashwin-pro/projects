@@ -120,45 +120,93 @@ def game():
                 while(not correct_answer_given):
                     # Ask the question to the next player
                     print(player_names[current_player],"should answer now.")
+                    if is_time_wanted:
+                        start_time = time()
                     answer = input(question_bank[question_index])
+                    if is_time_wanted:
+                        end_time = time()
                     questions_attempted[current_player] += 1
                     # Check if answer is right  
-                        
-                    if answer.strip().lower() == answers[question_index]:
-                                # Increment the score!
-                                # Compute the score between 0 and 1 depending on the number of wrong answers.
-                        score = 1 - 1/num_players * num_wrong_answers
-                        player_scores[current_player] += score
-                        print('Congrats! Right Answer,',player_names[current_player], ":-)")
-                        correct_answer_given = True
-                        Beep(2500,1000)
+                    if is_time_wanted:
+                        if end_time - start_time <= time_wanted:
+                            if answer.strip().lower() == answers[question_index]:
+                                        # Increment the score!
+                                        # Compute the score between 0 and 1 depending on the number of wrong answers.
+                                score = 1 - 1/num_players * num_wrong_answers
+                                player_scores[current_player] += score
+                                print('Congrats! Right Answer,',player_names[current_player], ":-)")
+                                correct_answer_given = True
+                                Beep(2500,1000)
+                            else:
+                                        # Wrong answer
+                                num_wrong_answers += 1
+                                print("Sorry, Wrong Answer,",player_names[current_player],":-(")
+                                Beep(250,1000)
+                                # Go to the next player
+                                current_player += 1
+                                # Make sure the index loops back
+                                if current_player >= num_players:
+                                    current_player = 0
+                                # Check if everyone got a chance already
+                                if current_player == first_answer_from:
+                                    print("The correct answer is",answers[question_index])
+                                    break
+                        else:
+                            num_wrong_answers += 1
+                            print("Sorry, too much time was taken for this question. :( \n")
+                            Beep(250,1000)
+                            # Go to the next player
+                            current_player += 1
+                            # Make sure the index loops back
+                            if current_player >= num_players:
+                                current_player = 0
+                            # Check if everyone got a chance already
+                            if current_player == first_answer_from:
+                                print("The correct answer is",answers[question_index])
+                                break
                     else:
-                                # Wrong answer
-                        num_wrong_answers += 1
-                        print("Sorry, Wrong Answer,",player_names[current_player],":-(")
-                        Beep(250,1000)
-                        # Go to the next player
-                        current_player += 1
-                        # Make sure the index loops back
-                        if current_player >= num_players:
-                            current_player = 0
-                        # Check if everyone got a chance already
-                        if current_player == first_answer_from:
-                            print("The correct answer is",answers[question_index])
-                            break
-
+                        if answer.strip().lower() == answers[question_index]:
+                                        # Increment the score!
+                                        # Compute the score between 0 and 1 depending on the number of wrong answers.
+                                score = 1 - 1/num_players * num_wrong_answers
+                                player_scores[current_player] += score
+                                print('Congrats! Right Answer,',player_names[current_player], ":-)")
+                                correct_answer_given = True
+                                Beep(2500,1000)
+                        else:
+                                    # Wrong answer
+                            num_wrong_answers += 1
+                            print("Sorry, Wrong Answer,",player_names[current_player],":-(")
+                            Beep(250,1000)
+                            # Go to the next player
+                            current_player += 1
+                            # Make sure the index loops back
+                            if current_player >= num_players:
+                                current_player = 0
+                            # Check if everyone got a chance already
+                            if current_player == first_answer_from:
+                                print("The correct answer is",answers[question_index])
+                                break
         else:
             # Putting settings for repeating choices.
             for current_player in range(num_players):
                 print(player_names[current_player],"should answer now.")
+                if is_time_wanted:
+                    start_time = time()
                 answer = input(question_bank[question_index])
+                if is_time_wanted:
+                    end_time = time()
                 questions_attempted[current_player] += 1
-                if answer.strip().lower() == answers[question_index]:
-                    score = 1 - 1/num_players * num_wrong_answers
-                    player_scores[current_player] += score
-                    raw_correct_answers.append(player_names[current_player])
-                else:
-                    num_wrong_answers += 1
+                if is_time_wanted:
+                    if end_time-start_time <= time_wanted:
+                        if answer.strip().lower() == answers[question_index]:
+                            score = 1 - 1/num_players * num_wrong_answers
+                            player_scores[current_player] += score
+                            raw_correct_answers.append(player_names[current_player])
+                        else:
+                            num_wrong_answers += 1
+                    else:
+                        print("Sorry, too much time was taken for this question. :( \n")
             # Printing answer and who got it right.
             print("The answer to this question is",answers[question_index]+".")
             if raw_correct_answers:
