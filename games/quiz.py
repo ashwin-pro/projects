@@ -78,8 +78,25 @@ def game():
 
     # Asking the users how much time they want for each question.
     if is_time_wanted:
-        time_wanted = input("Enter how much time you want for each question in seconds.")
-        
+        time_wanted = input("Enter how much time you want for each question in seconds.\n")
+        valid_input = False
+        positive_input_needed = False
+        while not valid_input:
+            try:
+                time_wanted = float(time_wanted)
+                # Check if input is in expected range, else keep prompting
+                if time_wanted > 0:
+                    valid_input = True
+                else:
+                    positive_input_needed = True
+            except:
+                pass
+            if not valid_input:
+                if not positive_input_needed:
+                    time_wanted = input("Invalid input. Enter a number.\n")
+                else:
+                    time_wanted = input("Invalid input. Enter a positive number.\n")
+
     # Creating question bank and bank of answers.
     question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n","What is the slowest animal?\n"]
     answers = ["peregrine falcon","bugatti chiron supersport","johann goethe","three-toed sloth"]
