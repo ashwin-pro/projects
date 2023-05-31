@@ -222,9 +222,8 @@ def game():
         print("Invalid rating.")
     # Adding the user's suggestions to the suggestions text file
     if suggestions:
-        suggestion = open("suggestions.txt","a")
-        suggestion.write(suggestions+"\n")
-        suggestion.close()
+        with open("suggestions.txt","a") as suggestion:
+            suggestion.write(f"{suggestions}\n")
     # Asking the user if they want to play again
     want_to_play = input('Would you like to play again?\nAnswer yes or no.\n')
     if want_to_play.strip().lower() == 'yes':
