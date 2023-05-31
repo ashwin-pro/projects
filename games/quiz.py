@@ -38,8 +38,7 @@ def game():
     # Get player names from user
 
     for i in range(num_players):
-        name_asking = "Enter the name of player"
-        player_names[i] = input(name_asking+" "+str(i+1)+".\n")
+        player_names[i] = input(f"Enter the name of player {i+1}.\n")
         player_scores[i] = 0
         questions_attempted[i] = 0
 
