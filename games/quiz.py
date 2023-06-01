@@ -1,12 +1,12 @@
-# This is a trivia game for people to play with their friends
+# This is a trivia game for people to play with their friends.
 # Creating a function for the game
 def game():
     # Importing the necessary modules.
-    from threading import Timer
     from math import inf
     from random import randint
     from winsound import Beep
-    from time import time    
+    from time import time
+
     # Get the number of players
     num_players = input("How many people are playing?\n")
     valid_input = False
@@ -23,9 +23,9 @@ def game():
             pass
         if not valid_input:
             if not positive_input_needed:
-                num_players = input("Invalid input. Enter an integer.\n")
+                num_players = input("Invalid input. Enter a number.\n")
             else:
-                num_players = input("Invalid input. Enter a positive integer.\n")
+                num_players = input("Invalid input. Enter a positive number.\n")
     
     # Initialize the dictionary to hold player names
     player_names = {}
