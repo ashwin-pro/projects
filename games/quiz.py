@@ -6,6 +6,7 @@ def game():
     from random import randint
     from winsound import Beep
     from threading import Timer
+    import sys
     # Get the number of players
     num_players = input("How many people are playing?\n")
     valid_input = False
@@ -96,6 +97,9 @@ def game():
                 else:
                     time_wanted = input("Invalid input. Enter a positive number.\n")
 
+    def timeout():
+        sys.exit("Sorry, Timeout. :(")
+
     # Creating question bank and bank of answers.
     question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n","What is the slowest animal?\n"]
     answers = ["peregrine falcon","bugatti chiron supersport","johann goethe","three-toed sloth"]
@@ -119,7 +123,13 @@ def game():
                 while(not correct_answer_given):
                     # Ask the question to the next player
                     print(player_names[current_player],"should answer now.")
+                    answer = ''
+                    if is_time_wanted:
+                        t = Timer(time_wanted,timeout)
+                        t.start()
                     answer = input(question_bank[question_index])
+                    if t:
+                        t.cancel()
                     questions_attempted[current_player] += 1
                     # Check if answer is right  
                     if answer.strip().lower() == answers[question_index]:
@@ -184,7 +194,13 @@ def game():
             # Putting settings for repeating choices.
             for current_player in range(num_players):
                 print(player_names[current_player],"should answer now.")
+                answer = ''
+                if is_time_wanted:
+                    t = Timer(time_wanted,timeout)
+                    t.start()
                 answer = input(question_bank[question_index])
+                if t:
+                    t.cancel()
                 questions_attempted[current_player] += 1
                 if answer.strip().lower() == answers[question_index]:
                     score = 1 - 1/num_players * num_wrong_answers
