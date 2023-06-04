@@ -6,7 +6,7 @@ def game():
     from random import randint
     from winsound import Beep
     from threading import Timer
-    import sys
+    import os
     # Get the number of players
     num_players = input("How many people are playing?\n")
     valid_input = False
@@ -98,7 +98,8 @@ def game():
                     time_wanted = input("Invalid input. Enter a positive number.\n")
 
     def timeout():
-        sys.exit("Sorry, Timeout. :(")
+        print("Sorry, time out :-()")
+        os._exit(os.EX_OK)
 
     # Creating question bank and bank of answers.
     question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n","What is the slowest animal?\n"]
