@@ -97,9 +97,15 @@ def game():
                 else:
                     time_wanted = input("Invalid input. Enter a positive number.\n")
 
+    # Creating a flag variable to check if timeout has been called.
+    global is_timed_out
+    is_timed_out = False
+
+    # Defining timeout.
     def timeout():
-        print("Sorry, time out :-()")
-        os._exit(os.EX_OK)
+        global is_timed_out
+        is_timed_out = True
+        print("Sorry, time out :-(\nPress enter to go to the next player/question.")
 
     # Creating question bank and bank of answers.
     question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n","What is the slowest animal?\n"]
@@ -111,6 +117,8 @@ def game():
 
     first_answer_from = randint(0,len(player_names)-1)
     # Ask each question to the players
+    # Making current_player global.
+    current_player = ''
 
     for question_index in range(len(question_bank)):
         current_player = first_answer_from
@@ -125,15 +133,18 @@ def game():
                     # Ask the question to the next player
                     print(player_names[current_player],"should answer now.")
                     answer = ''
+                    is_timed_out = False
                     if is_time_wanted:
                         t = Timer(time_wanted,timeout)
                         t.start()
                     answer = input(question_bank[question_index])
                     if t:
                         t.cancel()
+                        
                     questions_attempted[current_player] += 1
-                    # Check if answer is right  
-                    if answer.strip().lower() == answers[question_index]:
+                    # Check if answer is right
+                     
+                    if not is_timed_out and answer.strip().lower() == answers[question_index]:
                                 # Increment the score!
                                 # Compute the score between 0 and 1 depending on the number of wrong answers.
                         score = 1 - 1/num_players * num_wrong_answers
@@ -144,7 +155,8 @@ def game():
                     else:
                                 # Wrong answer
                         num_wrong_answers += 1
-                        print("Sorry, Wrong Answer,",player_names[current_player],":-(")
+                        if not is_timed_out:
+                            print("Sorry, Wrong Answer,",player_names[current_player],":-(")
                         Beep(250,1000)
                         # Go to the next player
                         current_player += 1
@@ -155,42 +167,6 @@ def game():
                         if current_player == first_answer_from:
                             print("The correct answer is",answers[question_index])
                             break
-                        else:
-                            num_wrong_answers += 1
-                            print("Sorry, too much time was taken for this question. :( \n")
-                            Beep(250,1000)
-                            # Go to the next player
-                            current_player += 1
-                            # Make sure the index loops back
-                            if current_player >= num_players:
-                                current_player = 0
-                            # Check if everyone got a chance already
-                            if current_player == first_answer_from:
-                                print("The correct answer is",answers[question_index])
-                                break
-
-                        if answer.strip().lower() == answers[question_index]:
-                                        # Increment the score!
-                                        # Compute the score between 0 and 1 depending on the number of wrong answers.
-                                score = 1 - 1/num_players * num_wrong_answers
-                                player_scores[current_player] += score
-                                print('Congrats! Right Answer,',player_names[current_player], ":-)")
-                                correct_answer_given = True
-                                Beep(2500,1000)
-                        else:
-                                    # Wrong answer
-                            num_wrong_answers += 1
-                            print("Sorry, Wrong Answer,",player_names[current_player],":-(")
-                            Beep(250,1000)
-                            # Go to the next player
-                            current_player += 1
-                            # Make sure the index loops back
-                            if current_player >= num_players:
-                                current_player = 0
-                            # Check if everyone got a chance already
-                            if current_player == first_answer_from:
-                                print("The correct answer is",answers[question_index])
-                                break
         else:
             # Putting settings for repeating choices.
             for current_player in range(num_players):
