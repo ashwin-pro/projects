@@ -24,9 +24,3 @@ for i in range(1,len(batting_averages)):
         score = 'apalling'
     print(f"{name.title()}'s batting average is {average}, which is an {score} average.")
 print(minimum,maximum,maximum-minimum,'~',maximum_name,' ~',minimum_name)
-class Human:
-    def __init__(self,legs,iq):
-        self.legs = 4
-        self.iq = 100
-ashwin = Human(None,130)
-print(ashwin.legs,ashwin.iq)

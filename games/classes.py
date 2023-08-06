@@ -1,5 +1,5 @@
 class Ninjago:
-    def __init__(self,name="Unknown",age=0,hasPowers=False,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies = [],enemies = [],coins = 50,power_ups = {}):
+    def __init__(self,name="Unknown",age=0,hasPowers=False,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies = [],enemies = [],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
         self.name = name
         self.age = age
         self.hasPowers = hasPowers
@@ -11,6 +11,7 @@ class Ninjago:
         self.enemies = enemies
         self.coins = coins
         self.power_ups = power_ups
+        self.position = position
     
     def introduce(self):
         if self.strengths:
@@ -85,8 +86,15 @@ class Ninjago:
         
         return self.power_levels
 
+    def max_power_levels(self):
+        self.max_power_levels = self.get_power_levels()
+        for power_up in self.power_ups.keys():
+            if self.power_ups[power_up] > 0:
+                self.max_power_levels += self.power_ups[power_up]
+        return self.max_power_levels
+
 class Elemental_Master(Ninjago):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {}):
+    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
         self.name = name
         self.age = age
         self.strengths = strengths
@@ -99,12 +107,13 @@ class Elemental_Master(Ninjago):
         self.hasPowers = True
         self.coins = coins
         self.power_ups = power_ups
+        self.position = position
     def introduce(self):
         raw_introduction = super().introduce()
         print(raw_introduction + f"I am the elemental master of {self.elemental_power}.")    
 
 class Spinjitsu_Master(Ninjago):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],coins = 50,power_ups = {}):
+    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
         self.name = name
         self.age = age
         self.strengths = strengths
@@ -116,13 +125,14 @@ class Spinjitsu_Master(Ninjago):
         self.hasPowers = False
         self.coins = coins
         self.power_ups = power_ups
+        self.position = position
     def introduce(self):
         print(super().introduce())
     def get_power_levels(self):
         return super().get_power_levels()
 
 class Ninja(Ninjago):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {}):
+    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
         self.name = name
         self.age = age
         self.strengths = strengths
@@ -135,6 +145,7 @@ class Ninja(Ninjago):
         self.hasPowers = True
         self.coins = coins
         self.power_ups = power_ups
+        self.position = position
     def introduce(self):
         raw_introduction = super().introduce()
         print(raw_introduction + f"I am the elemental master of {self.elemental_power}.")
@@ -142,59 +153,64 @@ class Ninja(Ninjago):
         return super().get_power_levels()
     
 def fight(Person1,Person2):
-    Person1.get_power_levels()
-    Person2.get_power_levels()
-    Person1_permanent_levels = Person1.power_levels
-    Person2_permanent_levels = Person2.power_levels
-    Person1_permanent_powers = Person1.hasPowers
-    Person2_permanent_powers = Person2.hasPowers
-    def get_power_ups(Person1):
-        if Person1.power_ups:
-            power_ups_wanted = f"Do you want to use any of your power-ups for this battle, {Person1.name.title()}?\nIf so, then type 'one'.\nIf you do not want to use any of your power-ups, type 'no'.\n"
-            power_ups_wanted += f"If you want to use more than one of your power-ups, enter 'more'.\n"
-            power_up = input(power_ups_wanted).lower()
-            power_ups_wanted = []
-            if power_up == 'no':
-                print('Applying no power-ups.')
-            elif power_up == 'more':
-                num_power_ups = int(input('Enter the number of power-ups you want to add.\n'))
-                for _ in range(0,num_power_ups):
-                    power_up_added = input(f"Enter a power-up.\n").title()
-                    if power_up_added in Person1.power_ups.keys():
-                        print('Adding the power-up to this battle.\n')
-                        if Person1.power_ups[power_up_added] > 0:
-                            Person1.power_levels += Person1.power_ups[power_up_added]
-                            del Person1.power_ups[power_up_added]
-                        else:
-                            Person1.hasPowers = False
-                            Person2.hasPowers = False
+    for loc_type in Person1.position:
+        if Person1[loc_type] == Person2[loc_type]:
+            Person1.get_power_levels()
+            Person2.get_power_levels()
+            Person1_permanent_levels = Person1.power_levels
+            Person2_permanent_levels = Person2.power_levels
+            Person1_permanent_powers = Person1.hasPowers
+            Person2_permanent_powers = Person2.hasPowers
+            def get_power_ups(Person1):
+                if Person1.power_ups:
+                    power_ups_wanted = f"Do you want to use any of your power-ups for this battle, {Person1.name.title()}?\nIf so, then type 'one'.\nIf you do not want to use any of your power-ups, type 'no'.\n"
+                    power_ups_wanted += f"If you want to use more than one of your power-ups, enter 'more'.\n"
+                    power_up = input(power_ups_wanted).lower()
+                    power_ups_wanted = []
+                    if power_up == 'no':
+                        print('Applying no power-ups.')
+                    elif power_up == 'more':
+                        num_power_ups = int(input('Enter the number of power-ups you want to add.\n'))
+                        for _ in range(0,num_power_ups):
+                            power_up_added = input(f"Enter a power-up.\n").title()
+                            if power_up_added in Person1.power_ups.keys():
+                                print('Adding the power-up to this battle.\n')
+                                if Person1.power_ups[power_up_added] > 0:
+                                    Person1.power_levels += Person1.power_ups[power_up_added]
+                                    del Person1.power_ups[power_up_added]
+                                else:
+                                    Person1.hasPowers = False
+                                    Person2.hasPowers = False
+                            else:
+                                print('You do not have this power-up.')
+                    elif power_up == 'one':
+                        power_up_added = (f"Enter your power-up.\n").lower()
+                        if power_up_added in Person1.power_ups.keys():
+                                print('Adding the power-up to this battle.\n')
+                                Person1.power_levels += Person1.power_ups[power_up_added]
+                                del Person1.power_ups[power_up_added]
                     else:
-                        print('You do not have this power-up.')
-            elif power_up == 'one':
-                power_up_added = (f"Enter your power-up.\n").lower()
-                if power_up_added in Person1.power_ups.keys():
-                        print('Adding the power-up to this battle.\n')
-                        Person1.power_levels += Person1.power_ups[power_up_added]
-                        del Person1.power_ups[power_up_added]
-            else:
-                print('Invalid Input. Selecting no power-ups for this battle.\n')
-    get_power_ups(Person1)
-    get_power_ups(Person2)
-    Person1.get_power_levels()
-    Person2.get_power_levels()
-    if Person1.power_levels > Person2.power_levels:
-        print(f"{Person1.name.title()} won.")
-        Person1.coins += 15
-    elif Person2.power_levels > Person1.power_levels:
-        print(f"{Person2.name.title()} won.")
-        Person2.coins += 15
-    elif Person1.power_levels == Person2.power_levels:
-        print(f"{Person1} and {Person2} are tied.")
-    Person1.power_levels,Person2.power_levels,Person1.hasPowers,Person2.hasPowers = Person1_permanent_levels,Person2_permanent_levels,Person1_permanent_powers,Person2_permanent_powers
-
+                        print('Invalid Input. Selecting no power-ups for this battle.\n')
+            get_power_ups(Person1)
+            get_power_ups(Person2)
+            Person1.get_power_levels()
+            Person2.get_power_levels()
+            if Person1.power_levels > Person2.power_levels:
+                print(f"{Person1.name.title()} won.")
+                Person1.coins += 15
+            elif Person2.power_levels > Person1.power_levels:
+                print(f"{Person2.name.title()} won.")
+                Person2.coins += 15
+            elif Person1.power_levels == Person2.power_levels:
+                print(f"{Person1} and {Person2} are tied.")
+            Person1.power_levels,Person2.power_levels,Person1.hasPowers,Person2.hasPowers = Person1_permanent_levels,Person2_permanent_levels,Person1_permanent_powers,Person2_permanent_powers
+        else:
+            print('Players are not close to each other and cannot fight.')
 items = {'Vengestone':100,'Scrolls of Forbidden Spinjitsu':250}
 
 def shop(Customer,dict=items):
+    global num_times
+    num_times = 0
     want_to_buy = f"Welcome to the shop!\nThis is where you can buy interesting power-ups that will boost your fighting ability.\n"
     want_to_buy += f"We currently have two items available for sale:\n1. Vengestone:\nThis material blocks all elemental powers "
     want_to_buy += f"in a battle, which is useful if you do not have elemental powers and are currently fighting against an elemental master"
@@ -204,7 +220,12 @@ def shop(Customer,dict=items):
     want_to_buy += f" coins.\n\n Please choose one of these power-ups to buy.\nType your choice (1 for Vengestone and 2 for the scrolls) "
     want_to_buy += f"and press enter.\n\n\n"
     def get_input():
-        choice = input(want_to_buy).lower()
+        global num_times
+        num_times += 1
+        if num_times == 1:
+            choice = input(want_to_buy).lower()
+        else:
+            choice = input('Invalid input. Enter 1 or 2.\n').lower()
         if choice == '1' and Customer.coins >= dict['Vengestone']:
             Customer.power_ups['Vengestone'] = -5
             Customer.coins -= dict['Vengestone']
@@ -218,6 +239,6 @@ def shop(Customer,dict=items):
         elif choice == '2' and Customer.coins < dict['Scrolls of Forbidden Spinjitsu']:
             print('Sorry, you do not have enough coins to buy this item.')
         else:
-            print('Invalid input. Enter 1 or 2.')
             get_input()
     get_input()
+

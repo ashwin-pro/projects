@@ -270,7 +270,7 @@ def game():
     suggestions = False
     if rating <= 5 and rating >= 0:
         if rating != 5:
-            if rating>=4:
+            if rating >= 4:
                 suggestions = (input("Thank you for your support. Please enter your complaints or suggestions below.\n"))
             elif rating >= 3:
                 suggestions = (input("Thank you for your time. Please enter your complaints or suggestions below.\n"))
