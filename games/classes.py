@@ -206,6 +206,8 @@ def fight(Person1,Person2):
             Person1.power_levels,Person2.power_levels,Person1.hasPowers,Person2.hasPowers = Person1_permanent_levels,Person2_permanent_levels,Person1_permanent_powers,Person2_permanent_powers
         else:
             print('Players are not close to each other and cannot fight.')
+
+
 items = {'Vengestone':100,'Scrolls of Forbidden Spinjitsu':250}
 
 def shop(Customer,dict=items):
@@ -242,3 +244,18 @@ def shop(Customer,dict=items):
             get_input()
     get_input()
 
+levels = {'legendary':{},'mythical':{},'hard':{},'moderately hard':{},'easy':{}}
+
+def quest(Quester,quests=levels):
+    global possible_quests
+    possible_quests = {}
+    def get_possible_quests():
+        for level in quests:
+            for quest in level:
+                if Quester.get_power_levels() >= level[quest]:
+                    possible_quests[quest] = level[quest]
+        return possible_quests
+    get_possible_quests()
+    print(f"The quests you can go for are:\n\n")
+    for i in range(len(list(possible_quests.keys()))):
+        print(f"{i+1}. {list(possible_quests.keys())[i].title()} : Minimum Level Required-{possible_quests[list(possible_quests.keys())[i]]}.\n")
