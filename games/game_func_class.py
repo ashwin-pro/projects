@@ -1,5 +1,11 @@
-class Ninjago:
-    def __init__(self,name="Unknown",age=0,hasPowers=False,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies = [],enemies = [],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
+class Npc:
+    def __init__(self,name):
+        self.name = name
+    def introduce(self):
+        return f"Hello, I am {self.name}."
+
+class Allies:
+    def __init__(self,name="Unknown",age=0,hasPowers=False,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies = [],enemies = [],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest=False,weapon=False):
         self.name = name
         self.age = age
         self.hasPowers = hasPowers
@@ -12,8 +18,14 @@ class Ninjago:
         self.coins = coins
         self.power_ups = power_ups
         self.position = position
+        self.quest = quest
+        self.weapon = weapon
     
     def introduce(self):
+        if self.quest:
+            quest_string = f'am currently on the quest {self.quest.title()}.'
+        else:
+            quest_string = 'am currently not on any quest.'
         if self.strengths:
             strength_string = ''
             for strength in self.strengths[:-2]:
@@ -56,7 +68,7 @@ class Ninjago:
         else:
             spinjitsu_introduce = "do not know"
         global introduction
-        introduction = f"Hello, I am {self.name.title()}. I am {self.age} years old. I {spinjitsu_introduce} Spinjitsu. My strengths are {strength_string}. My weaknesses are {weakness_string}. My power level is {self.power_level}. My allies are {ally_string}. My enemies are {enemy_string}. I {powers_introduce} elemental powers. I have {self.coins} coins."
+        introduction = f"Hello, I am {self.name.title()}. I am {self.age} years old. I {spinjitsu_introduce} Spinjitsu. My strengths are {strength_string}. My weaknesses are {weakness_string}. My power level is {self.power_level}. My allies are {ally_string}. My enemies are {enemy_string}. I {powers_introduce} elemental powers. I have {self.coins} coins. My x position is {self.position['x']}, my y position is {self.position['y']}, and my z position is {self.position['z']}. I {quest_string}."
         return introduction
 
     def get_power_levels(self):
@@ -93,8 +105,8 @@ class Ninjago:
                 self.max_power_levels += self.power_ups[power_up]
         return self.max_power_levels
 
-class Elemental_Master(Ninjago):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
+class Elemental_Master(Allies):
+    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
         self.name = name
         self.age = age
         self.strengths = strengths
@@ -108,12 +120,14 @@ class Elemental_Master(Ninjago):
         self.coins = coins
         self.power_ups = power_ups
         self.position = position
+        self.quest = quest
+        self.weapon = weapon
     def introduce(self):
         raw_introduction = super().introduce()
         print(raw_introduction + f"I am the elemental master of {self.elemental_power}.")    
 
-class Spinjitsu_Master(Ninjago):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
+class Spinjitsu_Master(Allies):
+    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
         self.name = name
         self.age = age
         self.strengths = strengths
@@ -126,13 +140,15 @@ class Spinjitsu_Master(Ninjago):
         self.coins = coins
         self.power_ups = power_ups
         self.position = position
+        self.quest = quest
+        self.weapon = weapon
     def introduce(self):
         print(super().introduce())
     def get_power_levels(self):
         return super().get_power_levels()
 
-class Ninja(Ninjago):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0}):
+class Ninja(Allies):
+    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
         self.name = name
         self.age = age
         self.strengths = strengths
@@ -146,6 +162,8 @@ class Ninja(Ninjago):
         self.coins = coins
         self.power_ups = power_ups
         self.position = position
+        self.quest = quest
+        self.weapon = weapon
     def introduce(self):
         raw_introduction = super().introduce()
         print(raw_introduction + f"I am the elemental master of {self.elemental_power}.")
@@ -205,12 +223,12 @@ def fight(Person1,Person2):
                 print(f"{Person1} and {Person2} are tied.")
             Person1.power_levels,Person2.power_levels,Person1.hasPowers,Person2.hasPowers = Person1_permanent_levels,Person2_permanent_levels,Person1_permanent_powers,Person2_permanent_powers
         else:
-            print('Players are not close to each other and cannot fight.')
+            print('Players are too far away and cannot fight.')
 
 
-items = {'Vengestone':100,'Scrolls of Forbidden Spinjitsu':250}
+power_ups = {'Vengestone':100,'Scrolls of Forbidden Spinjitsu':250}
 
-def shop(Customer,dict=items):
+def power_up_shop(Customer,dict=power_ups):
     global num_times
     num_times = 0
     want_to_buy = f"Welcome to the shop!\nThis is where you can buy interesting power-ups that will boost your fighting ability.\n"
@@ -244,18 +262,29 @@ def shop(Customer,dict=items):
             get_input()
     get_input()
 
-levels = {'legendary':{},'mythical':{},'hard':{},'moderately hard':{},'easy':{}}
+weapons = {'sword':25,'nunchucks':25,'hammer':25,'shurikens':25}
 
-def quest(Quester,quests=levels):
-    global possible_quests
-    possible_quests = {}
-    def get_possible_quests():
-        for level in quests:
-            for quest in level:
-                if Quester.get_power_levels() >= level[quest]:
-                    possible_quests[quest] = level[quest]
-        return possible_quests
-    get_possible_quests()
-    print(f"The quests you can go for are:\n\n")
-    for i in range(len(list(possible_quests.keys()))):
-        print(f"{i+1}. {list(possible_quests.keys())[i].title()} : Minimum Level Required-{possible_quests[list(possible_quests.keys())[i]]}.\n")
+def weapon_shop(Customer,dict=weapons):
+    want_to_buy = f"There are four weapons available:\n\n1. Sword - A sword is a melee weapon that does point damage and bleeding damege.\n"
+    want_to_buy += f"2. Nunchucks - Nunchucks are short to medium range weapons. They can be thrown to do ranged damage. They do blunt damage.\n"
+    want_to_buy += f"3. Hammer - A hammer is a melee weapon that does blunt and AOE damage. It has a knockback effect that pushes your opponent away.\n"
+    want_to_buy += f"4. Shurikens - Shurikens are medium to long range weapons. They can be thrown to deal point damage and bleeding damage.\n"
+    want_to_buy += f"Each of these items cost 25 coins. Please enter your chosen weapon.\n\nYou currently have {Customer.coins} coins.\n\n\n"
+    global chosen
+    chosen = input(want_to_buy).strip().lower()
+    def get_input():        
+        def get_weapon():
+            global chosen
+            if chosen in dict.keys():
+                if Customer.coins >= dict[chosen]:
+                    Customer.weapon = chosen
+                    Customer.coins -= dict[chosen]
+                    print(f"You now have {Customer.coins} coins.\n\n\n")
+                else:
+                    chosen = input('Sorry, you do not have enough coins to buy this item. Please choose another item. The choices are Sword, Hammer, Nunchucks or Shurikens. Each of these items cost 25 coins\n')
+                    get_weapon()
+            else:
+                chosen = input('Sorry, this weapon is not available. Please choose another. The choices are Sword, Hammer, Nunchucks or Shurikens. Each of these items cost 25 coins\n')
+                get_weapon()
+        get_weapon()
+    get_input()
