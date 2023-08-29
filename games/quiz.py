@@ -138,7 +138,7 @@ def game():
                         t = Timer(time_wanted,timeout)
                         t.start()
                     answer = input(question_bank[question_index])
-                    if t:
+                    if answer:
                         t.cancel()
                         
                     questions_attempted[current_player] += 1
@@ -277,7 +277,7 @@ def game():
             elif rating >=1:
                 suggestions = (input("Please enter your complaints or suggestions below.\n"))
             else:
-                exit
+                exit()
 
         else:
             print("Thank you so much for your support.")
