@@ -302,5 +302,5 @@ def game():
         else:
             print('Selecting no by default.')
             print('Thank you for playing.')
-# Calling the game function in the beginning to run the game
+# Calling the game function in the beginning to run the game OpenAI. (2023). ChatGPT (August 3 Version) [Large language model]. https://chat.openai.com
 game()

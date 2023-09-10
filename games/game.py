@@ -1,12 +1,29 @@
 
-    # Importing the necessary modules and files.
+# Importing the necessary modules and files.
 from time import sleep
-from game_func_class import *
 from keyboard import wait,is_pressed
 from random import choice
 from turtle import *
+from game_func_class import *
+'''Importing modules'''
 
 def game():
+    def get_rating_suggestion():
+        rating = input('Please rate this game out of 5. Your guidance and support are of paramount importance in the improvement of this game.').strip().lower()
+        correct_input = False
+        while not correct_input:
+            try:
+                rating = float(rating)
+                if rating > 0:
+                    correct_input = True
+                else:
+                    rating = input('Incorrect input. Please enter a positive number.\n')
+            except:
+                rating = input('Incorrect input. Please enter a positive number.\n')
+        suggestions = input('Please enter your suggestions for the improvement of this game.\n')
+        return suggestions,rating
+    '''Defining a function called get_rating_suggestion that gets a rating and suggestion for the game.'''
+
     # Introducing the game.
     game_intro = "Welcome to the Ninjago game. This game is a adventure game inspired by the popular TV show Lego Ninjago. Press 'q' to start."
     print(game_intro)
@@ -31,9 +48,9 @@ def game():
     # Introducing player & buying first weapon.
     starter_bot = Npc('Bob')
     if player_type == 'spinjitsu master':
-        get_weapon = print(f"{starter_bot.introduce()} You are a {player_type.title()} and have {player.coins} coins. Please select a weapon from the shop. Press 'o' to open the shop.\n")
+        print(f"{starter_bot.introduce()} You are a {player_type.title()} and have {player.coins} coins. Please select a weapon from the shop. Press 'o' to open the shop.\n")
     else:
-        get_weapon = print(f"{starter_bot.introduce()} You are a {player_type.title()} and have {player.coins} coins. Your element is {player.elemental_power}. Please select a weapon from the shop. Press 'o' to open the shop.\n")
+        print(f"{starter_bot.introduce()} You are a {player_type.title()} and have {player.coins} coins. Your element is {player.elemental_power}. Please select a weapon from the shop. Press 'o' to open the shop.\n")
     wait('o')
     weapon_shop(player)
 
@@ -59,23 +76,12 @@ def game():
     waiting = 0
     while True:
         if is_pressed('t'):
-            break
-            
+            print(f"Travelling...")
+            sleep(5.0)
         # Asking for replay and suggestions.
         if waiting > 60:
             print('Sorry, you did not reach the village in time.')
-            rating = input('Please rate this game out of 5. Your guidance and support are of paramount importance in the improvement of this game.').strip().lower()
-            correct_input = False
-            while not correct_input:
-                try:
-                    rating = float(rating)
-                    if rating > 0:
-                        correct_input = True
-                    else:
-                        rating = input('Incorrect input. Please enter a positive number.\n')
-                except:
-                    rating = input('Incorrect input. Please enter a positive number.\n')
-            suggestions = input('Please enter your suggestions for the improvement of this game.\n')
+            suggestions,rating = get_rating_suggestion()
             with open('game_suggestions.txt','a') as file:
                 file.write(f"{suggestions} : {rating}/5 stars.\n")
             print('\nWould you like to play again?\nType 1 to play again and 2 to quit.\nYou have one minute to enter input. If no input is given, you will automatically quit.\n')
@@ -93,3 +99,6 @@ def game():
         sleep(0.1)
         waiting += 0.1
 
+    print(f"As you approach the village, you see a snake with a ")
+
+game()    
