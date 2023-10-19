@@ -35,7 +35,11 @@ adjectives = [
     ['Zealous','Zany'],
 ]
 
-def print_acrostic(name,alphabet={letter:adjectives[count] for count,letter in enumerate(f"abcdefghijklmnopqrstuvwxyz")},):
+for adjective_sub in adjectives:
+    for i,adjective in enumerate(adjective_sub):
+        adjective_sub[i] = adjective.lower()
+
+def print_acrostic(name,alphabet={letter:adjectives[count] for count,letter in enumerate(f"abcdefghijklmnopqrstuvwxyz")}):
     for index,letter in enumerate(name):
         num_before = name[:index].count(letter)
         try:
@@ -43,22 +47,25 @@ def print_acrostic(name,alphabet={letter:adjectives[count] for count,letter in e
             already_done.append(alphabet[letter][num_before])
             print(f"{letter.title()} - {alphabet[letter][num_before].title()}")
         except:
-            pass
-            
+            for very_form in [f"Very {adjective}" for adjective in alphabet[letter]]:
+                if very_form not in already_done:
+                    print(f"{letter.title()} - {very_form}")
+                    already_done.append(very_form)
+                    break
+
+            for i in range(name.count(letter)):
+                for very_form_ in [f"Very {'very '*(i+1)}{adjective}" for adjective in alphabet[letter]]:
+                    if very_form_ not in already_done:
+                        print(f"{letter.title()} - {very_form_}")
+                        already_done.append(very_form_)
+                        break
 
 name = clean(input(f"What's your name? : ").strip().lower())
 if name in [f"shashank",f"sahasra",]:
     if name == f"shashank":
-        print(f'''S - Smart
-H - Heroic
-A - Awesome
-S - Spectacular
-H - Hallowed
-A - Agreeable
-N - Noble
-K - Knowledgeable''')
+        print_acrostic(name=name)
+        print()
     else:
-        print(f'''S - Sapient
-# Do adjectives''')
+        print_acrostic(name=name)
 else:
     print_acrostic(name=name)
