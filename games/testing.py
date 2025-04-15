@@ -1,0 +1,2 @@
+import enchant
+help(enchant)

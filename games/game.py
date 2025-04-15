@@ -30,17 +30,16 @@ def game():
     wait('q')
 
     # Getting character name.
-    name = input("Please enter your character's name.\n")
+    name = input("Please enter your character's name")
     player_type = choice(['elemental master','ninja','spinjitsu master'])
 
     # Getting character type & element (if possible).
     if player_type == 'spinjitsu master':
-        global player
-        player = Spinjitsu_Master(name=name)
+        player = Spinjitsu_Master(name="You")
     elif player_type == 'ninja':
-        player = Ninja(name=name)
+        player = Ninja(name="You")
     elif player_type == 'elemental master':
-        player = Elemental_Master(name=name)
+        player = Elemental_Master(name="You")
 
     if player_type == 'elemental master' or player_type == 'ninja':
         player.elemental_power = choice(['fire','water','wind','ice','lightning','earth'])
@@ -53,7 +52,7 @@ def game():
         print(f"{starter_bot.introduce()} You are a {player_type.title()} and have {player.coins} coins. Your element is {player.elemental_power}. Please select a weapon from the shop. Press 'o' to open the shop.\n")
     wait('o')
     weapon_shop(player)
-
+    assert(player.weapon == "sword")
     # Give first quest.
     print("Jamanakai Village is in danger! Go save the residents of the village. Walk towards the red dot on the map to reach the village. Press 'm' to open the map. Close the pop-up window and press 'm' again to continue.\n\n")
     wait('m')
@@ -74,13 +73,14 @@ def game():
     # Travelling to Jamanakai Village.
     print("Press 't' to start heading towards the village. You have 1 minute to get to the village.\n")
     waiting = 0
-    while True:
+    while waiting <= 60:
         if is_pressed('t'):
             print(f"Travelling...")
             sleep(5.0)
+            break
         # Asking for replay and suggestions.
         if waiting > 60:
-            print('Sorry, you did not reach the village in time.')
+            print(f'Sorry, you did not reach the village in time.')
             suggestions,rating = get_rating_suggestion()
             with open('game_suggestions.txt','a') as file:
                 file.write(f"{suggestions} : {rating}/5 stars.\n")
@@ -90,7 +90,7 @@ def game():
                 if is_pressed(1):
                     game()
                 if is_pressed(2):
-                    print('Thank you for playing.')
+                    print(f'Thank you for playing.')
                     exit()
                 if inner_waiting > 60:
                     exit()
@@ -99,6 +99,25 @@ def game():
         sleep(0.1)
         waiting += 0.1
 
-    print(f"As you approach the village, you see a snake with a ")
-
-game()    
+    print("As you approach the village, you see a serpentine with blue stripes. It approaches you, ready to attack. Do you attack?")
+    print("Press 'a' to attack, 't' to try to talk to it, and 'r' to retreat")
+    timer = 0
+    while timer <= 30:
+        if timer == 20:
+            print("The snake is approaching you fast! What do you do?")
+        if is_pressed('a'):
+            print("You attack it.")
+            fight(player,Fighter())
+            break
+        elif is_pressed('r'):
+            print("You retreat, clambering up to the top of a house so you can see better. You see that the whole village is being swarmed by Serpentine, who appear to be led by some sort of leader, holding up a staff.")
+            print("You make a plan. You try to ")
+            
+        elif is_pressed('t'):
+            print("You try to talk to it, but it just hisses and tries to attack you. You are forced to attack back. You fight it.")
+            fight(player,Fighter())
+            break
+        sleep(0.1)
+        timer += 0.1
+if __name__ == "__main__":
+    game() 

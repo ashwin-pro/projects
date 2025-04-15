@@ -21,9 +21,9 @@ for i in range(2,n+1,1):
     if not is_composite:
         primes.append(i)
 
-prime_string = f"The prime numbers coming before {n} are : "
+prime_std::string = f"The prime numbers coming before {n} are : "
 for prime in primes[:-2]:
-    prime_string += f"{prime}, "
-prime_string += f"and {primes[-1]}."
+    prime_std::string += f"{prime}, "
+prime_std::string += f"and {primes[-1]}."
 
-print(prime_string)
+print(prime_std::string)

@@ -1,306 +1,91 @@
-# This is a trivia game for people to play with their friends.
-# Creating a function for the game
+from random import sample
+import python_module
+from time import time as timer
+import csv
+
+
 def game():
-    # Importing the necessary modules.
-    from math import inf
-    from random import randint
-    from winsound import Beep
-    from threading import Timer
-    import os
-    # Get the number of players
-    num_players = input("How many people are playing?\n")
-    valid_input = False
-    positive_input_needed = False
-    while not valid_input:
-        try:
-            num_players = int(num_players)
-            # Check if input is in expected range, else keep prompting
-            if num_players > 0:
-                valid_input = True
-            else:
-                positive_input_needed = True
-        except:
-            pass
-        if not valid_input:
-            if not positive_input_needed:
-                num_players = input("Invalid input. Enter a number.\n")
-            else:
-                num_players = input("Invalid input. Enter a positive number.\n")
-    
-    # Initialize the dictionary to hold player names
-    player_names = {}
-    # Initialize the dictionary to hold player scores
-    player_scores = {}
 
-    # Creating a dictionary of the questions attempted by each player.
-    questions_attempted = {}
+    def player_init():
+        '''A function that initializes player related necessary objects'''
+        # Getting the number of players
+        player_names = []
+        # Adding players to a list
+        num_players = python_module.input_with_validation(
+            prompt="Enter the number of players (enter nothing to default to 1): ", default=1, condition="positive integer")
+        for i in range(num_players):
+            player_names.append(python_module.in_list(
+                raw_tbc=f"Enter the name of the {i+1}{'st' if i == 0 else 'nd' if i == 1 else 'rd' if i == 2 else 'th'} player: ", condition='not in', list_=player_names,))
+        # Creating dictionary for player name:player points, initializing player points to 0
+        return {player_name: 0 for player_name in player_names}
+    player_points = player_init()
 
-    # Get player names from user
+    def get_questions_and_answers(num_questions):
+        '''Getting the question bank and the corresponding answers'''
+        # Efficiently getting data from a large file
+        with open("questions.txt", "r") as question_file, open("answers.txt", "r") as answer_file:
+            for question, answer in zip(list(question_file)[:num_questions:1], answer_file):
+                yield question, answer
 
-    for i in range(num_players):
-        player_names[i] = input(f"Enter the name of player {i+1}.\n")
-        player_scores[i] = 0
-        questions_attempted[i] = 0
+    def var_init(player_points=player_points):
+        is_time = python_module.yes_or_no(
+            "Do you want the questions to be timed? Enter 'y' / 'yes', or 'n' / 'no' (default 'n'): ", default='n')
+        return python_module.in_range(
+            f"Enter the number of questions (between 1 and 50) (default 25): ", 1, 50, "positive integer", default=25), dict(
+            sample(list(player_points.items()), len(player_points))), is_time, python_module.input_with_validation(
+            prompt="Enter the time you want for each question in seconds (default 30 seconds): ", condition="positive float", default=30) if is_time else 0, int(python_module.in_list("Enter the question type - 1 if you want to skip to the next question as soon as a question is answered correctly - or 2 if you want to give everyone a chance (defaulting to 1): ",
+                                                                                                                                                                                       list_=['1', '2',], condition="in", prompt="Enter 1 or 2: ", default='1'))
+    num_questions, player_points, is_time, time, question_type = var_init()
 
-    # Asking the players what mode they want
-
-    mode = input("What mode of quizzing do you want?:\n first right answer - (When a correct answer is given, the next question is immediately asked.), or \n repeating choices(Even if the right answer is given, the same question continues.)?\n")
-
-    if mode.strip().lower() == "first right answer":
-        mode = 1
-    elif mode.strip().lower() == "repeating choices":
-        mode = 2
-    else:
-        mode = input(("Enter a valid mode(first right answer or repeating choices).\n"))
-        if mode.strip().lower() == "first right answer":
-            mode = 1
-        elif mode.strip().lower() == "repeating choices":
-            mode = 2
-        else:
-            print("Selecting first right answer by default.")
-            mode = 1
-
-    # Asking the users whether they want time.
-    is_time_wanted = input("Do you want your questions to be timed? Enter yes if you do and no if you don't.\n")
-    if is_time_wanted.strip().lower() == 'yes':
-        is_time_wanted = True
-    elif is_time_wanted.strip().lower() == 'no':
-        is_time_wanted = False
-    else:
-        is_time_wanted = input("Invalid input. Enter yes or no.\n")
-        if is_time_wanted.strip().lower() == 'yes':
-            is_time_wanted = True
-        elif is_time_wanted.strip().lower() == 'no':
-            is_time_wanted = False
-        else:
-            is_time_wanted = False
-            print("Turning time on by default.\n")
-
-    # Asking the users how much time they want for each question.
-    if is_time_wanted:
-        time_wanted = input("Enter how much time you want for each question in seconds.\n")
-        valid_input = False
-        positive_input_needed = False
-        while not valid_input:
-            try:
-                time_wanted = float(time_wanted)
-                # Check if input is in expected range, else keep prompting
-                if time_wanted > 0:
-                    valid_input = True
-                else:
-                    positive_input_needed = True
-            except:
-                pass
-            if not valid_input:
-                if not positive_input_needed:
-                    time_wanted = input("Invalid input. Enter a number.\n")
-                else:
-                    time_wanted = input("Invalid input. Enter a positive number.\n")
-
-    # Creating a flag variable to check if timeout has been called.
-    global is_timed_out
-    is_timed_out = False
-
-    # Defining timeout.
-    def timeout():
-        global is_timed_out
-        is_timed_out = True
-        print("Sorry, time out :-(\nPress enter to go to the next player/question.")
-
-    # Creating question bank and bank of answers.
-    question_bank = ["What is the fastest bird?\n","What is the fastest car ever built?\n","Who is the smartest person alive?\n","What is the slowest animal?\n"]
-    answers = ["peregrine falcon","bugatti chiron supersport","johann goethe","three-toed sloth"]
-
-    # Run the quiz
-    # First, decide who takes the first question
-    # Randomly select the id of the player who is the lucky one!
-
-    first_answer_from = randint(0,len(player_names)-1)
-    # Ask each question to the players
-    # Making current_player global.
-    current_player = ''
-
-    for question_index in range(len(question_bank)):
-        current_player = first_answer_from
-        num_wrong_answers = 0
-        raw_correct_answers = []
-        # Loop all players until correct answer is given
-
-        if  mode == 1:
-                correct_answer_given = False
-                    
-                while(not correct_answer_given):
-                    # Ask the question to the next player
-                    print(player_names[current_player],"should answer now.")
-                    answer = ''
-                    is_timed_out = False
-                    if is_time_wanted:
-                        t = Timer(time_wanted,timeout)
-                        t.start()
-                    answer = input(question_bank[question_index])
-                    if answer:
-                        t.cancel()
-                        
-                    questions_attempted[current_player] += 1
-                    # Check if answer is right
-                     
-                    if not is_timed_out and answer.strip().lower() == answers[question_index]:
-                                # Increment the score!
-                                # Compute the score between 0 and 1 depending on the number of wrong answers.
-                        score = 1 - 1/num_players * num_wrong_answers
-                        player_scores[current_player] += score
-                        print('Congrats! Right Answer,',player_names[current_player], ":-)")
-                        correct_answer_given = True
-                        Beep(2500,1000)
-                    else:
-                                # Wrong answer
-                        num_wrong_answers += 1
-                        if not is_timed_out:
-                            print("Sorry, Wrong Answer,",player_names[current_player],":-(")
-                        Beep(250,1000)
-                        # Go to the next player
-                        current_player += 1
-                        # Make sure the index loops back
-                        if current_player >= num_players:
-                            current_player = 0
-                        # Check if everyone got a chance already
-                        if current_player == first_answer_from:
-                            print("The correct answer is",answers[question_index])
+    def core_loop(player_points=player_points, num_questions=num_questions, is_time=is_time, time=time, question_type=question_type):
+        '''The core question-answer loop'''
+        selected, i = list(player_points.keys()), 0
+        for question, answer in get_questions_and_answers(num_questions):
+            for j, player in enumerate(selected):
+                print('')
+                start_time, guess, end_time = timer() if is_time else 0, input(
+                    f"{i+1}. {question} (for {player}): ").strip().lower(), timer() if is_time else 0
+                if (end_time - start_time) <= time:
+                    if guess == answer.strip().lower():
+                        player_points[player] += 1
+                        if question_type == 1:
+                            selected.append(selected.pop(0))
+                            print(
+                                f"\nCongrats, {player}, you got it!\nOn to the next question {f'(for {selected[0]})...' if i != num_questions-1 else '...'}: ")
                             break
-        else:
-            # Putting settings for repeating choices.
-            for current_player in range(num_players):
-                print(player_names[current_player],"should answer now.")
-                answer = ''
-                if is_time_wanted:
-                    t = Timer(time_wanted,timeout)
-                    t.start()
-                answer = input(question_bank[question_index])
-                if t:
-                    t.cancel()
-                questions_attempted[current_player] += 1
-                if answer.strip().lower() == answers[question_index]:
-                    score = 1 - 1/num_players * num_wrong_answers
-                    player_scores[current_player] += score
-                    raw_correct_answers.append(player_names[current_player])
                 else:
-                    num_wrong_answers += 1
-            # Printing answer and who got it right.
-            print("The answer to this question is",answers[question_index]+".")
-            if raw_correct_answers:
-                if len(raw_correct_answers) == 1:
-                    print(raw_correct_answers[0],"got this question correct.")
-                elif len(raw_correct_answers) == 2:
-                    print(raw_correct_answers[0],"and",raw_correct_answers[1],"got this question correct.")
-                else:
-                    correct_answers_1 = ', '.join(raw_correct_answers[:-1])
-                    correct_answers_2 = " and"+" "+str(raw_correct_answers[-1])
-                    print(correct_answers_1+correct_answers_2,"got this question correct")
-            else:
-                print("No one got this question correct.")
-        first_answer_from += 1
-        if first_answer_from >= num_players:
-            first_answer_from = 0
-            
-        if question_index != len(question_bank)-1:
-            print("")
-            print("Let's go to the next question")
-            print("")
-        else:
-            print("")
+                    print(f"Sorry, {player}, you took too much time")
+                print((f"\nOn to the next player ({selected[j+1]})...\n") if (j !=
+                      len(player_points)-1) else (f"\nOn to the next question {f'(for {selected[0]}) ...' if i != num_questions   -1 else '...'}: "))
+            i += 1
+            print("On to the scoring..." if i == num_questions else '')
+        del i
+    core_loop()
 
-    # Announcing the results.
-    for i in range(num_players):
-        print(player_names[i],"got",str(int(player_scores[i]/len(question_bank)*100))+"% from his attempted questions("+str(questions_attempted[i])+").")
-
-    # Congratulate the players based on their scores.
-    for m in range(num_players):
-        if player_scores[m] != 1:
-            if player_scores[m]>=0.9:
-                print("Congratulations!,",player_names[m],", you got a very good score. Keep on practising, and maybe you will get 100% one day.")
-            elif player_scores[m]>=0.8:
-                print("Congratulations!,",player_names[m],", you got a good score. Keep on practising and you might get 100% one day.")
-            elif player_scores[m]>=0.7:
-                print("Good attempt,",player_names[m],", try harder next time and you will definitely improve.")
-            else:
-                print("Nice try,",player_names[m],", try harder next time.")
-        else:
-            print("Congratulations!,",player_names[m],", you got a score of 100%!")
-    # Creating the array which will help me find the winner.
-
-    the_winner_array = []
-    for j in range(num_players):
-        current_percentage = int(player_scores[j]/len(question_bank)*100)
-        the_winner_array.append(current_percentage)
-
-    # Finding the winner
-
-    biggest_number = -inf
-    for x in range(len(the_winner_array)):
-        if the_winner_array[x] > biggest_number:
-            biggest_number = the_winner_array[x]
-            biggest_number_index = x
-            
-    print("Congrats",player_names[biggest_number_index]+"!, you are the winner!")
-    for i in range(5):
-        Beep(randint(37,5000),500)
-
-    # Thanking the players for playing
-    print("Thank you for playing our game. We hope to see you next time.")
-
-    # Asking for ratings and suggestions
-    rating = input("Please rate our game out of five stars.\n")
-    valid_input = False
-    positive_input_needed = False
-    while not valid_input:
-        try:
-            rating = float(rating)
-            # Check if input is in expected range, else keep prompting
-            if rating >= 0:
-                valid_input = True
-            else:
-                positive_input_needed = True
-        except:
-            pass
-        if not valid_input:
-            if not positive_input_needed:
-                rating = input("Invalid input. Enter a number.\n")
-            else:
-                rating = input("Invalid input. Enter a positive number.\n")
-    suggestions = False
-    if rating <= 5 and rating >= 0:
-        if rating != 5:
-            if rating >= 4:
-                suggestions = (input("Thank you for your support. Please enter your complaints or suggestions below.\n"))
-            elif rating >= 3:
-                suggestions = (input("Thank you for your time. Please enter your complaints or suggestions below.\n"))
-            elif rating >=1:
-                suggestions = (input("Please enter your complaints or suggestions below.\n"))
-            else:
-                exit()
-
-        else:
-            print("Thank you so much for your support.")
-    else:
-        print("Invalid rating.")
-    # Adding the user's suggestions to the suggestions text file
-    if suggestions:
-        with open("suggestions.txt","a") as suggestion:
-            suggestion.write(f"{suggestions}\n")
-    # Asking the user if they want to play again
-    want_to_play = input('Would you like to play again?\nAnswer yes or no.\n')
-    if want_to_play.strip().lower() == 'yes':
+    def scoring(player_points=player_points, num_questions=num_questions):
+        player_points = dict(sorted(player_points.items(),
+                                    key=lambda item: item[1], reverse=True))
+        for k, name in enumerate(list(player_points.keys())):
+            print(
+                f"{k+1}{'st' if k == 0 else 'nd' if k == 1 else 'rd' if k == 2 else 'th'} place: {name}, with {player_points[name]} answer{'' if player_points[name] == 1 else 's'} correct out of {num_questions} ({player_points[name]*100/num_questions}%){'!' if k in [0,1,2] else '.'}")
+    scoring()
+    if python_module.yes_or_no(
+            "Do you want to play again? Enter 'y' / 'yes', or 'n' / 'no' (defaulting to 'n'): ", default='n'):
+        print("Restarting game ...\n\n")
         game()
-    elif want_to_play.strip().lower() == 'no':
-        print('Thank you for playing.')
     else:
-        want_to_play = input('Invalid input. Enter yes or no.\n')
-        if want_to_play.strip().lower() == 'yes':
-            game()
-        elif want_to_play.strip().lower() == 'no':
-            print('Thank you for playing.')
-        else:
-            print('Selecting no by default.')
-            print('Thank you for playing.')
-# Calling the game function in the beginning to run the game OpenAI. (2023). ChatGPT (August 3 Version) [Large language model]. https://chat.openai.com
-game()
+        def feedback():
+            rating = python_module.in_range(
+                tbc="Thank you for your time. Please rate our game out of 5 stars (defaulting to 5): ", ll=0, hl=5, condition="positive float", default=5)
+            suggestions = input("Thank you for your rating. Please enter any suggestions for the game:\n" if rating == 5 else "Thank you for your rating. Please enter any suggestions you may have for our game:\n" if rating >=
+                                4 else "Thank you for your time. Please enter any suggestions / complaints you may have for our game:\n" if rating >= 3 else "Please enter any complaints you may have about our game:\n")
+            with open("ratings.txt", "a") as rating_file:
+                rating_file.write(f"{rating}\n")
+            with open("suggestions.txt", "a") as suggestions_file:
+                suggestions_file.write(f"{suggestions}\n")
+            print("We hope you enjoyed our game. Please play again later.")
+        feedback()
+
+
+if __name__ == "__main__":
+    game()

@@ -1,13 +1,13 @@
+from random import choice as c
 class Npc:
     def __init__(self,name):
         self.name = name
     def introduce(self):
         return f"Hello, I am {self.name}."
-
-class Allies:
-    def __init__(self,name="Unknown",age=0,hasPowers=False,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies = [],enemies = [],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest=False,weapon=False):
+power_list = ['fire','water','green','energy','ice','earth','fusion','tech',]
+class Fighter:
+    def __init__(self,name="Unknown",hasPowers=False,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies = [],enemies = [],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest=False,weapon=False):
         self.name = name
-        self.age = age
         self.hasPowers = hasPowers
         self.strengths = strengths
         self.weaknesses = weaknesses
@@ -20,56 +20,6 @@ class Allies:
         self.position = position
         self.quest = quest
         self.weapon = weapon
-    
-    def introduce(self):
-        if self.quest:
-            quest_string = f'am currently on the quest {self.quest.title()}.'
-        else:
-            quest_string = 'am currently not on any quest.'
-        if self.strengths:
-            strength_string = ''
-            for strength in self.strengths[:-2]:
-                strength_string += f"{strength}, "
-            strength_string += f"{self.strengths[-2]} and {self.strengths[-1]}"
-        else:
-            strength_string = "none"
-
-        if self.weaknesses:
-            weakness_string = ''
-            for weakness in self.weaknesses[:-2]:
-                weakness_string += f"{weakness}, "
-            weakness_string += f"{self.weaknesses[-2]} and {self.weaknesses[-1]}"
-        else:
-            weakness_string = "none"
-
-        if self.allies:
-            ally_string = ''
-            for ally in self.allies[:-2]:
-                ally_string += f"{ally.title()}, "
-            ally_string += f"{self.allies[-2].title()} and {self.allies[-1].title()}"
-        else:
-            ally_string = "none"
-
-        if self.enemies:
-            enemy_string = ''
-            for enemy in self.enemies[:-2]:
-                enemy_string += f"{enemy.title()}, "
-            enemy_string += f"{self.enemies[-2].title()} and {self.enemies[-1].title()}"
-        else:
-            enemy_string = "none"
-
-        if self.hasPowers:
-            powers_introduce = "have"
-        else:
-            powers_introduce = "do not have"
-
-        if self.knowsSpinjitsu:
-            spinjitsu_introduce = "know"
-        else:
-            spinjitsu_introduce = "do not know"
-        global introduction
-        introduction = f"Hello, I am {self.name.title()}. I am {self.age} years old. I {spinjitsu_introduce} Spinjitsu. My strengths are {strength_string}. My weaknesses are {weakness_string}. My power level is {self.power_level}. My allies are {ally_string}. My enemies are {enemy_string}. I {powers_introduce} elemental powers. I have {self.coins} coins. My x position is {self.position['x']}, my y position is {self.position['y']}, and my z position is {self.position['z']}. I {quest_string}."
-        return introduction
 
     def get_power_levels(self):
         self.power_levels = 0
@@ -105,10 +55,9 @@ class Allies:
                 self.max_power_levels += self.power_ups[power_up]
         return self.max_power_levels
 
-class Elemental_Master(Allies):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
+class Elemental_Master(Fighter):
+    def __init__(self,name="Unknown",strengths=[],weaknesses=[],power_level="Moderate",knowsSpinjitsu=False,allies=[],enemies=[],elemental_power=c(power_list),coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
         self.name = name
-        self.age = age
         self.strengths = strengths
         self.weaknesses = weaknesses
         self.power_level = power_level
@@ -122,14 +71,10 @@ class Elemental_Master(Allies):
         self.position = position
         self.quest = quest
         self.weapon = weapon
-    def introduce(self):
-        raw_introduction = super().introduce()
-        print(raw_introduction + f"I am the elemental master of {self.elemental_power}.")    
 
-class Spinjitsu_Master(Allies):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
+class Spinjitsu_Master(Fighter):
+    def __init__(self,name="Unknown",strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
         self.name = name
-        self.age = age
         self.strengths = strengths
         self.weaknesses = weaknesses
         self.power_level = power_level
@@ -142,15 +87,12 @@ class Spinjitsu_Master(Allies):
         self.position = position
         self.quest = quest
         self.weapon = weapon
-    def introduce(self):
-        print(super().introduce())
     def get_power_levels(self):
         return super().get_power_levels()
 
-class Ninja(Allies):
-    def __init__(self,name="Unknown",age=0,strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],elemental_power='energy',coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
+class Ninja(Fighter):
+    def __init__(self,name="Unknown",strengths=[],weaknesses=[],power_level="Moderate",allies=[],enemies=[],elemental_power=c(power_list),coins = 50,power_ups = {},position = {'x':0,'y':0,'z':0},quest = False,weapon = False):
         self.name = name
-        self.age = age
         self.strengths = strengths
         self.weaknesses = weaknesses
         self.power_level = power_level
@@ -164,15 +106,13 @@ class Ninja(Allies):
         self.position = position
         self.quest = quest
         self.weapon = weapon
-    def introduce(self):
-        raw_introduction = super().introduce()
-        print(raw_introduction + f"I am the elemental master of {self.elemental_power}.")
     def get_power_levels(self):
         return super().get_power_levels()
     
 def fight(Person1,Person2):
-    for loc_type in Person1.position:
-        if Person1[loc_type] == Person2[loc_type]:
+    #First check if both players are in the same position
+    #Only then start the fight
+        if Person1.position == Person2.position:
             Person1.get_power_levels()
             Person2.get_power_levels()
             Person1_permanent_levels = Person1.power_levels
