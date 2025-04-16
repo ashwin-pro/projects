@@ -59,6 +59,9 @@
         "iomanip": "cpp",
         "ratio": "cpp",
         "sstream": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "cstring": "cpp",
+        "string": "cpp",
+        "xstring": "cpp"
     }
 }

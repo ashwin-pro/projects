@@ -1,18 +1,22 @@
-#include <std::string>
+#include <string>
 #include <iostream>
 
-void func(int i);
+void func(std::string array[]);
 
 int main()
 {
     int i = 0;
-    const std::std::string ARRAY[4] = {"a", "b", "c", "d"};
-    func(i);
-    std::std::cout << "The variable is now: " << i;
+    std::string ARRAY[4] = {"a", "b", "c", "d"};
+    func(ARRAY);
+    // std::cout << "The variable is now: " << i;
+    for (std::string element : ARRAY)
+    {
+        std::cout << element << '\n';
+    }
     return 0;
 }
 
-void func(int i)
+void func(std::string array[])
 {
-    i++;
+    array[0] = "abcde";
 }

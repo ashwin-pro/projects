@@ -35,6 +35,7 @@ int checkSequenceAndDetermineWinner(char board[3][3]);                  // Check
 std::string botChoice(char board[3][3]);                                // AI logic to determine the best move
 bool positionIsFree(char board[3][3], std::string loc);                 // Checks if a position is available
 int index(std::vector<char> vec, char target);                          // Helper function to find index of an element in a vector
+void playAgain();                                                       // Function to allow the user to play again
 
 // Main function
 int main()
@@ -224,6 +225,7 @@ int main()
     drawBoard(board);
     // Game ended with a tie
     std::cout << "\n\n\nThere is a tie between " << playerOneName << " and " << playerTwoName << ", as all the squares have been taken up.\n\n";
+    playAgain();
     return 0;
 }
 
@@ -369,8 +371,9 @@ int checkSequenceAndDetermineWinner(char board[3][3])
         }
         break;
     }
-    std::cout << "\n\n\n\n";
-    exit(0); // Terminate the program when a winner is found
+    std::cout << "\n\n";
+    playAgain(); // Give the user the option to play again
+    return 0;
 }
 
 // Checks if a position on the board is free
@@ -481,4 +484,25 @@ int index(std::vector<char> vec, char target)
 {
     auto it = find(vec.begin(), vec.end(), target);
     return (it != vec.end()) ? distance(vec.begin(), it) : -1;
+}
+
+void playAgain()
+{
+    std::string answer;
+    std::cout << "Do you want to play again? (y/n): ";
+    std::getline(std::cin, answer);
+    while (answer.empty())
+    {
+        std::cout << "Enter a NONEMPTY answer: ";
+        std::getline(std::cin, answer);
+    }
+    if (answer[0] == 'y' || answer[0] == 'Y')
+    {
+        std::cout << "\n\nOkay, restarting the game:-\n\n\n\n";
+        main();
+    }
+    else
+    {
+        std::cout << "\n\nOkay, terminating the game.\n\n\n\n";
+    }
 }
